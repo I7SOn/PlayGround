@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no" />
+  <meta name="theme-color" content="#05080c" />
+  <title>BLACKSITE PROTOCOL</title>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <div id="app">
+    <div id="screen-fx" aria-hidden="true">
+      <div class="fx-vignette"></div>
+      <div class="fx-grain"></div>
+      <div class="fx-scan"></div>
+      <div id="damage-flash"></div>
+      <div id="lightning-flash"></div>
+    </div>
+
+    <div id="hud" class="hidden">
+      <div class="hud-corner tl">
+        <div class="mission-tag"><span class="dot"></span> OPERATION NIGHTFALL</div>
+        <div class="wave-row">
+          <span id="wave-label">WAVE 01</span><span class="wave-sep">/ 05</span>
+        </div>
+        <div class="objective"><span class="objective-key">OBJECTIVE</span> <span id="objective-text">ELIMINATE HOSTILES</span></div>
+        <div class="hostile-row"><span class="chev">▸</span> HOSTILES <b id="hostile-count">00</b></div>
+      </div>
+
+      <div id="compass-wrap">
+        <div id="compass-window">
+          <div id="compass-strip"></div>
+          <div class="compass-notch"></div>
+        </div>
+        <div id="compass-heading">000</div>
+      </div>
+
+      <div class="hud-corner tr">
+        <div class="score-label">COMBAT SCORE</div>
+        <div id="score-value">000000</div>
+        <div class="score-sub"><span>KILLS <b id="kills-value">0</b></span><span id="mult-value" class="mult">×1</span></div>
+      </div>
+
+      <div id="killfeed"></div>
+      <div id="toast"><span id="toast-kicker">INCOMING</span><span id="toast-main">WAVE 01</span></div>
+
+      <div id="radar-panel">
+        <div class="panel-label">PROXIMITY // 35M</div>
+        <canvas id="radar" width="208" height="208"></canvas>
+        <div class="radar-ring"></div>
+      </div>
+
+      <div id="vitals">
+        <div class="vitals-head"><span class="panel-label">VITALS</span><span id="health-value">100</span></div>
+        <div class="health-track"><div id="health-bar"></div><div class="health-ticks"></div></div>
+        <div class="vitals-foot"><span id="health-state">STABLE</span><span>OPERATOR 01</span></div>
+      </div>
+
+      <div id="ammo">
+        <div class="weapon-name"><span id="weapon-name">M4 // CARBINE</span><span id="fire-mode">AUTO</span></div>
+        <div class="ammo-row">
+          <div id="ammo-mag">30</div>
+          <div class="ammo-meta"><span>/ <b id="ammo-reserve">180</b></span><small>5.56 NATO</small></div>
+        </div>
+        <div class="ammo-dots" id="ammo-dots"></div>
+        <div id="reload-hint" class="hidden"><kbd>R</kbd> RELOAD</div>
+      </div>
+
+      <div id="crosshair">
+        <i class="ch t"></i><i class="ch b"></i><i class="ch l"></i><i class="ch r"></i><i class="ch-dot"></i>
+      </div>
+      <div id="hitmarker"><i></i><i></i><i></i><i></i></div>
+
+      <div id="streak-toast" class="hidden"></div>
+      <div id="capture-prompt" class="hidden">CLICK TO CAPTURE MOUSE</div>
+      <div id="low-ammo">LOW AMMO</div>
+    </div>
+
+    <section id="start-screen" class="screen">
+      <div class="screen-backdrop"></div>
+      <div class="screen-frame"></div>
+      <div class="start-grid">
+        <div class="start-left">
+          <div class="eyebrow"><span class="live-dot"></span> LIVE OPERATION // 02:47 LOCAL</div>
+          <h1>BLACK<span>SITE</span></h1>
+          <div class="title-rule"><span></span><b>PROTOCOL</b></div>
+          <p class="brief">Port Meridian has gone dark. A private military force holds the containment yard. Breach the perimeter, survive five assault waves and hold the line until extraction.</p>
+          <div class="mission-data">
+            <div><span>LOCATION</span><b>PORT MERIDIAN</b></div>
+            <div><span>THREAT</span><b class="hot">SEVERE</b></div>
+            <div><span>EXTRACTION</span><b>05 WAVES</b></div>
+          </div>
+          <div class="controls-grid">
+            <div><kbd>W A S D</kbd><span>MOVE</span></div>
+            <div><kbd>MOUSE</kbd><span>AIM</span></div>
+            <div><kbd>LMB</kbd><span>FIRE</span></div>
+            <div><kbd>RMB</kbd><span>AIM DOWN SIGHT</span></div>
+            <div><kbd>R</kbd><span>RELOAD</span></div>
+            <div><kbd>SHIFT</kbd><span>SPRINT</span></div>
+            <div><kbd>SPACE</kbd><span>JUMP</span></div>
+            <div><kbd>ESC</kbd><span>PAUSE</span></div>
+          </div>
+          <div class="start-actions">
+            <button id="start-btn" class="primary-btn" type="button" aria-label="START GAME"><span>START GAME</span><small>DEPLOY TO SECTOR 07</small></button>
+            <div class="best-block"><span>PERSONAL BEST</span><b id="best-score">000000</b></div>
+          </div>
+        </div>
+        <div class="start-right">
+          <div class="status-card">
+            <div class="status-head"><span>NIGHTFALL</span><b>v1.0</b></div>
+            <div class="status-line"><span>LINK</span><i class="on"></i><b>SECURE</b></div>
+            <div class="status-line"><span>WEAPON</span><b>M4 CARBINE</b></div>
+            <div class="status-line"><span>CONDITIONS</span><b>HEAVY RAIN</b></div>
+            <div class="status-line"><span>VISIBILITY</span><b class="warn">LOW</b></div>
+            <div class="signal"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          </div>
+          <div class="settings-card">
+            <div class="settings-title">FIELD CALIBRATION</div>
+            <label class="setting"><span>MOUSE SENSITIVITY</span><output id="sens-out">0.9</output><input id="sens-slider" type="range" min="0.2" max="2.5" step="0.1" value="0.9" /></label>
+            <label class="setting"><span>MASTER VOLUME</span><output id="vol-out">70</output><input id="vol-slider" type="range" min="0" max="100" step="5" value="70" /></label>
+            <div class="settings-note">Touch devices: use the on-screen sticks. Drag the right side of the screen to look.</div>
+          </div>
+          <div class="build-tag">BLACKSITE ENGINE 1.0 // WEBGL2</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="pause-screen" class="screen compact hidden">
+      <div class="screen-backdrop"></div>
+      <div class="pause-card">
+        <div class="eyebrow"><span class="live-dot"></span> OPERATION SUSPENDED</div>
+        <h2>PAUSED</h2>
+        <p>The yard is still hot. Re-enter when ready.</p>
+        <div class="pause-stats">
+          <div><span>WAVE</span><b id="pause-wave">01</b></div>
+          <div><span>SCORE</span><b id="pause-score">0</b></div>
+          <div><span>KILLS</span><b id="pause-kills">0</b></div>
+        </div>
+        <div class="settings-card inline">
+          <label class="setting"><span>MOUSE SENSITIVITY</span><output id="pause-sens-out">0.9</output><input id="pause-sens" type="range" min="0.2" max="2.5" step="0.1" value="0.9" /></label>
+          <label class="setting"><span>MASTER VOLUME</span><output id="pause-vol-out">70</output><input id="pause-vol" type="range" min="0" max="100" step="5" value="70" /></label>
+        </div>
+        <div class="pause-actions">
+          <button id="resume-btn" class="primary-btn" type="button"><span>RESUME</span><small>RETURN TO COMBAT</small></button>
+          <button id="abort-btn" class="ghost-btn" type="button">ABORT MISSION</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="end-screen" class="screen compact hidden">
+      <div class="screen-backdrop"></div>
+      <div class="pause-card end-card">
+        <div class="eyebrow" id="end-kicker"><span class="live-dot"></span> MISSION COMPLETE</div>
+        <h2 id="end-title">EXTRACTION</h2>
+        <p id="end-copy">All hostile waves neutralized. Good work, operator.</p>
+        <div class="end-stats">
+          <div><span>FINAL SCORE</span><b id="end-score">0</b></div>
+          <div><span>ELIMINATIONS</span><b id="end-kills">0</b></div>
+          <div><span>ACCURACY</span><b id="end-accuracy">0%</b></div>
+          <div><span>TIME</span><b id="end-time">00:00</b></div>
+        </div>
+        <div class="end-best">PERSONAL BEST <b id="end-best">000000</b></div>
+        <div class="pause-actions">
+          <button id="again-btn" class="primary-btn" type="button" aria-label="START GAME"><span>START GAME</span><small>REDEPLOY TO SECTOR 07</small></button>
+          <button id="menu-btn" class="ghost-btn" type="button">RETURN TO BRIEFING</button>
+        </div>
+      </div>
+    </section>
+
+    <div id="touch-ui" class="hidden">
+      <div id="move-zone">
+        <div class="touch-stick"><div id="move-knob"></div></div>
+      </div>
+      <div id="look-zone"></div>
+      <button id="btn-fire" class="touch-btn fire" type="button"><span>FIRE</span></button>
+      <button id="btn-ads" class="touch-btn" type="button"><span>ADS</span></button>
+      <button id="btn-reload" class="touch-btn small" type="button"><span>R</span></button>
+      <button id="btn-jump" class="touch-btn small" type="button"><span>JUMP</span></button>
+      <button id="btn-pause" class="touch-btn ghost" type="button"><span>II</span></button>
+    </div>
+
+    <div id="boot-veil"><div class="boot-mark">BS</div><div class="boot-line"><i></i></div><div class="boot-copy">INITIALIZING TACTICAL LINK</div></div>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
